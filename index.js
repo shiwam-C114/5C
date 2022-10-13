@@ -20,8 +20,8 @@ app.post("/addid", (req, res) => {
     console.log(req.body)
     fetch(`https://api.github.com/users/${req.body.userid}`).then(res => res.json()).then(async (data) => {
         console.log(data);
-        const data = await User.find({ "login": req.body.userid })
-        if (data.length) {
+        const userdata = await User.find({ "login": req.body.userid })
+        if (userdata.length) {
             res.send({ msg: "user already exist", data })
         }
         else {
@@ -39,6 +39,16 @@ app.post("/addid", (req, res) => {
     res.send({ msg: "api working" })
 })
 // first api to rescive a user ID and save it to the DB
+
+app.post("/findmutual", async (req, res) => {
+    let data = await fetch(`https://api.github.com/users/${req.body.userid}/followers`)
+    let followers = await data.json()
+    let data2 = await fetch(`https://api.github.com/users/${req.body.userid}/following`)
+    let following = await data2.json()
+    const results = followers.filter(({ id: id1 }) => following.some(({ id: id2 }) => id2 === id1));
+    console.log(results)
+    res.send({msg: `mutual friends found ${results.length}`, data:results})
+})
 
 app.listen(port, (err) => {
     if (!err) {
