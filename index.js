@@ -56,18 +56,18 @@ app.post("/findmutual", async (req, res) => {
 app.get("/searchuser", async (req, res) => {
 
     const { username, location } = req.query;
-    const data = await UserModel.find({ "login": username, "location": location })
+    const data = await User.find({ "login": username, "location": location })
 
     res.send({ msg: "user found ", data })
 })
 
 //api for deleting user
-app.delete("/deleteuser", async (req, res) => {
+app.delete("/deleteuser/:username", async (req, res) => {
     const username = req.params.username
-    const data = await UserModel.find({ "login": username })
+    const data = await User.find({ "login": username })
     console.log(data);
     if (data.length) {
-        const info = await UserModel.deleteOne({ "login": username })
+        const info = await User.deleteOne({ "login": username })
         res.send({ msg: "success", data: info })
 
     }
@@ -77,12 +77,12 @@ app.delete("/deleteuser", async (req, res) => {
 })
 
 // update user api 
-app.post("/updateuser", async (req, res) => {
+app.patch("/updateuser/:username", async (req, res) => {
     const username = req.params.username
-    const data = await UserModel.find({ "login": username })
+    const data = await User.find({ "login": username })
     const newData = req.body;
     if (data.length) {
-        const info = await UserModel.updateMany({ "login": username }, { $set: newData })
+        const info = await User.updateMany({ "login": username }, { $set: newData })
         res.send({ msg: "success", data: info })
     }
     else {
@@ -94,7 +94,7 @@ app.post("/updateuser", async (req, res) => {
 app.get("/sorted", async (req, res) => {
 
     const { public_repos, public_gists, followers, following, created_at } = req.query;
-    const data = await UserModel.find().sort({
+    const data = await User.find().sort({
         "public_repos": public_repos,
         "public_gists": public_gists,
         "followers": followers,
