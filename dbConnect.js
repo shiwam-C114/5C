@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const dbConnect = () => {
     const connectionParams = { useNewUrlParser: true }
-    mongoose.connect('mongodb+srv://sad:sad@cluster0.ib8moea.mongodb.net/test', connectionParams)
+    mongoose.connect(process.env.db, connectionParams)
     mongoose.connection.on("connected", () => {
         console.log("connected to DB")
     })

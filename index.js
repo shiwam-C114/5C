@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const app = express()
 const path = require('path');
@@ -5,6 +6,8 @@ const dbConnect = require('./dbConnect');
 const port = 8080;
 const User = require('./models/user');
 dbConnect();
+
+
 
 app.use(express.json())
 app.get("/ping", (req, res) => {
@@ -109,6 +112,7 @@ app.get("/sorted", async (req, res) => {
     }
 
 })
+
 
 app.listen(port, (err) => {
     if (!err) {
